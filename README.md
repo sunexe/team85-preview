@@ -49,7 +49,8 @@ team85.cn/
 │   └── error-handler.js    # 全局错误兜底
 │
 ├── data/                   # 数据 JSON（按年份归档）
-│   ├── matches.json        # 当前年份比赛
+│   ├── years.json          # 年份清单（下拉框数据源）
+│   ├── matches2026.json    # 2026 年比赛（统一命名，无特例）
 │   ├── matches2021.json    # 2021 年每周赛事实录
 │   ├── matches2022.json    # 2022 年
 │   ├── matches2023.json    # 2023 年
@@ -133,16 +134,26 @@ npx eslint js/
 
 | 文件 | 用途 |
 |---|---|
-| `matches.json` | **当前年份（默认 2026）**的赛事数据，按日期倒序 |
-| `matches2021.json` | 2021 年每周赛事实录，按日期倒序 |
-| `matches2022.json` | 2022 年 |
-| `matches2023.json` | 2023 年 |
-| `matches2024.json` | 2024 年 |
-| `matches2025.json` | 2025 年 |
+| `years.json` | **年份清单**（下拉框自动生成），新增年份只需在此加一行 |
+| `matches{年份}.json` | **所有年份统一命名**（如 `matches2026.json`），按日期倒序 |
 | `matches_earlier.json` | **2021 年之前**（2019-2020）较早期的合集 |
 
-> ⚠️ **不要**把上一年或前几年的数据混入 `matches.json`。每年初建议把
-> 上一年合集移动到 `matches20XX.json`，并把当前 `matches.json` 清空。
+```json
+// data/years.json 结构
+{ "years": ["2026", "2025", "2024", "2023", "2022", "2021"], "earlier": true }
+```
+
+> ✅ **无特例设计**：当年数据文件也叫 `matches{年份}.json`（不再有特殊的 `matches.json`），
+> 照片一律放 `matches/{年份}/` 子目录。跨年时**不需要修改任何程序代码**。
+
+### 🔄 跨年工作流（2026 → 2027 示例）
+
+只需两步，不用改 JS/HTML：
+
+1. 新建 `data/matches2027.json`（复制上一年文件结构，清空 matches 数组）
+2. `data/years.json` 的 `years` 数组头部加 `"2027"`
+
+照片从新年开始直接存入 `matches/2027/`，旧年份文件与目录原封不动。
 
 ### 一场比赛的数据结构（参考）
 
@@ -208,7 +219,7 @@ npx eslint js/
 
 1. **拍照**：队友拍完照片后按 `日期-序号.jpg` 命名（例如 `20260104-1.jpg`）。
 2. **分类存放**：将照片放入 `matches/2026/` 对应目录。
-3. **更新数据**：编辑 `data/matches.json`，在对应比赛记录的 `imageUrl` 字段填入路径。
+3. **更新数据**：编辑 `data/matches{年份}.json`，在对应比赛记录的 `imageUrl` 字段填入路径。
 4. **压缩优化**：上传前建议压缩到 ≤ 500 KB（推荐工具：[Squoosh](https://squoosh.app/)）。
 5. **部署**：通过 `./scripts/sync-assets.sh push` 一键同步到服务器。
 

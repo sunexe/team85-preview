@@ -1,10 +1,39 @@
 let matches = [];
 let currentIndex = 0;
 
-// 获取当前年份
+// 获取当前选中的年份
 function getCurrentYear() {
   const yearSelect = document.getElementById('yearSelect') || document.getElementById('yearSelectBottom');
-  return yearSelect ? yearSelect.value : '2026';
+  return yearSelect ? yearSelect.value : '';
+}
+
+/**
+ * 📅 从 data/years.json 读取年份清单，动态填充年份下拉框。
+ * 默认选中列表第一个（即最新年份）——不依赖系统时间，
+ * 避免 1 月份新一年还没比赛时选中空年份。
+ * years.json 结构: { "years": ["2026", "2025", ...], "earlier": true }
+ */
+async function initYearSelectors() {
+  let years = [];
+  let hasEarlier = false;
+  try {
+    const response = await fetch('data/years.json');
+    const data = await response.json();
+    years = data.years || [];
+    hasEarlier = Boolean(data.earlier);
+  } catch (error) {
+    console.error('加载 years.json 失败:', error);
+    return;
+  }
+
+  const options = years.map((y) => `<option value="${y}">${y}年</option>`);
+  if (hasEarlier) {
+    options.push('<option value="earlier">更早的</option>');
+  }
+
+  document.querySelectorAll('#yearSelect, #yearSelectBottom').forEach((sel) => {
+    sel.innerHTML = options.join('');
+  });
 }
 
 // 加载赛事数据
@@ -22,8 +51,8 @@ async function loadMatchData() {
   if (year === 'earlier') {
     dataFile = 'matches_earlier.json';
   } else {
-    // 当前年份（2026）使用matches.json，其他年份使用matches${year}.json
-    dataFile = year === '2026' ? 'matches.json' : `matches${year}.json`;
+    // 所有年份统一命名: matches{年份}.json（当年不再是特例）
+    dataFile = `matches${year}.json`;
   }
 
   try {
@@ -462,9 +491,10 @@ function hideAnnouncementBanner() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initYearNav();
-  loadMatchData();
+  await initYearSelectors(); // 先填充年份下拉框（默认选中最新年份）
+  loadMatchData(); // 再按选中年份加载数据
   initLazyLoading();
   loadMembers();
   addScrollIndicator();

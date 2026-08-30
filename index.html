@@ -63,15 +63,8 @@
           <h1>汕头一中八五足球队</h1>
         </div>
         <div class="nav-controls">
-          <select id="yearSelect" class="nav-select">
-            <option value="2026" selected>2026年</option>
-            <option value="2025">2025年</option>
-            <option value="2024">2024年</option>
-            <option value="2023">2023年</option>
-            <option value="2022">2022年</option>
-            <option value="2021">2021年</option>
-            <option value="earlier">更早的</option>
-          </select>
+          <!-- 年份选项由 js/main.js 从 data/years.json 动态填充 -->
+          <select id="yearSelect" class="nav-select"></select>
           <a href="history.html" class="nav-link">关于我们</a>
         </div>
       </nav>
@@ -106,15 +99,8 @@
 
       <div class="year-nav">
         <span>请选择年份：</span>
-        <select id="yearSelectBottom" class="year-select">
-          <option value="2026" selected>2026年</option>
-          <option value="2025">2025年</option>
-          <option value="2024">2024年</option>
-          <option value="2023">2023年</option>
-          <option value="2022">2022年</option>
-          <option value="2021">2021年</option>
-          <option value="earlier">更早的</option>
-        </select>
+        <!-- 年份选项由 js/main.js 从 data/years.json 动态填充 -->
+        <select id="yearSelectBottom" class="year-select"></select>
       </div>
     </main>
 
