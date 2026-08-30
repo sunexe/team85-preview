@@ -1,5 +1,5 @@
 <?php
-// 照片评论/点赞 —— 纯函数库（可单测，无 HTTP 副作用）
+// 照片评论/点赞 —— 纯函数 + 处理器（无 HTTP I/O；处理器涉及 session/cookie 与文件读写）
 
 const INTERACTION_DATA_DIR = __DIR__ . '/../data/interactions/';
 const INTERACTION_COMMENTS_FILE = INTERACTION_DATA_DIR . 'comments.json';
@@ -108,8 +108,10 @@ function post_comment(string $photo, string $name, string $content, string $capt
     $name = trim($name);
     $content = trim($content);
     $comments = read_json(INTERACTION_COMMENTS_FILE);
-    $comments[$photo][] = ['id' => uniqid(), 'name' => $name, 'content' => $content, 'time' => date('c')];
-    write_json(INTERACTION_COMMENTS_FILE, $comments);
+    $comments[$photo][] = ['id' => uniqid('', true), 'name' => $name, 'content' => $content, 'time' => date('c')];
+    if (!write_json(INTERACTION_COMMENTS_FILE, $comments)) {
+        return ['ok' => false, 'error' => '保存失败，请稍后再试', 'status' => 500];
+    }
     return ['ok' => true];
 }
 
@@ -131,7 +133,9 @@ function post_like(string $photo, string $ip): array {
     }
     $likes = read_json(INTERACTION_LIKES_FILE);
     $likes[$photo] = ($likes[$photo] ?? 0) + 1;
-    write_json(INTERACTION_LIKES_FILE, $likes);
+    if (!write_json(INTERACTION_LIKES_FILE, $likes)) {
+        return ['ok' => false, 'error' => '保存失败，请稍后再试', 'status' => 500];
+    }
     setcookie($cookie, '1', time() + 365 * 24 * 3600, '/');
     return ['ok' => true, 'count' => $likes[$photo]];
 }
