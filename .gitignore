@@ -68,7 +68,6 @@ images/*.jpeg
 images/*.gif
 images/*.webp
 images/*.ico
-images/*.svg
 favicon.ico
 apple-touch-icon*.png
 apple-touch-icon*.jpg
@@ -98,3 +97,9 @@ DocumentRevisions-V100
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+
+# 例外：允许 SVG 队徽作为占位资源入库（位图不入库但矢量图可以，
+# 这是为了 GitHub Pages 预览需要队徽占位）
+!images/*.svg
+!images/**/*.svg
+!favicon.svg

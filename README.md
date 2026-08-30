@@ -1,14 +1,13 @@
 # 汕头一中八五足球队宣传网站
 
-[![Site](https://img.shields.io/badge/site-www.team85.cn-blue)](https://www.team85.cn/)
-[![GitHub](https://img.shields.io/badge/github-sunexe%2Fteam85.cn-black)](https://github.com/sunexe/team85.cn)
+[![Site](https://img.shields.io/badge/🏠_正式站-www.team85.cn-blue)](https://www.team85.cn/)
+[![Pages 预览](https://img.shields.io/badge/🪞_Pages预览-sunexe.github.io-brightgreen)](https://sunexe.github.io/team85-preview/)
+[![GitHub 主页](https://img.shields.io/badge/🐙_主仓库-sunexe%2Fteam85.cn-black)](https://github.com/sunexe/team85.cn)
+[![GitHub 镜像](https://img.shields.io/badge/🪞_镜像-sunexe%2Fteam85--preview-black)](https://github.com/sunexe/team85-preview)
 [![ICP](https://img.shields.io/badge/ICP-粤ICP备2025429887号-orange)](https://beian.miit.gov.cn/)
+[![JS Style](https://img.shields.io/badge/code--style-eslint--flat-blueviolet)](https://eslint.org/docs/latest/use/configure/configuration-files)
 
 > **因为热爱所以坚持，愿时光能缓，故人不散**
-
-本网站是 [汕头一中八五足球队](https://www.team85.cn/) 的官方宣传站点。球队成立于
-**2019 年 8 月 3 日**，由汕头市第一中学 1985 届（初三/高一）校友为班底，汇聚各界
-热爱足球的同路人共同组成。球队定期进行周末训练、友谊赛与邀请赛。
 
 ---
 
@@ -249,3 +248,75 @@ rsync -av matches/ user@server:/www/wwwroot/www.team85.cn/matches/
 <p align="center">
   <sub>Built with ❤️ by the team of 一中八五 since 2019</sub>
 </p>
+
+---
+
+## 🌐 GitHub Pages 预览
+
+本仓库的 **公开镜像仓库** 已自动部署到 GitHub Pages：
+
+🔗 **预览地址**: <https://sunexe.github.io/team85-preview/>
+
+> ⚠️ **重要提示：预览与正式版的差异**
+>
+> - 正式网站: <https://www.team85.cn/> —— **完整版**，包含所有比赛照片、成员头像、队旗等
+> - 预览网站: <https://sunexe.github.io/team85-preview/> —— **代码与数据预览**，不含图片资源
+>
+> 由于比赛照片、成员头像等大量二进制资源被 `.gitignore` 排除（出于仓库体积考虑），
+> 预览站点的图片位置为**占位显示**，但代码、样式、数据、SEO 配置完全一致。
+
+### 如何同步预览更新？
+
+```bash
+# 一行命令：把 main 分支同步到预览仓库并触发 Pages 重建
+git push preview main
+```
+
+GitHub Pages 通常 30 秒内自动重建。
+
+---
+
+## 🪞 公开镜像与生产环境差异一览
+
+| 资源 | 生产 (www.team85.cn) | Pages 预览 |
+|---|---|---|
+| HTML/CSS/JS | ✅ 完整 | ✅ 完整 |
+| 数据 (data/*.json) | ✅ 完整 | ✅ 完整 |
+| 队徽 (SVG) | ✅ 矢量版优先 | ✅ 矢量版优先 |
+| 队徽 (PNG) | ✅ 兼容老浏览器 | ⚠️ 占位（被 gitignore 排除） |
+| 比赛照片 | ✅ 真实图片 | ⚠️ 占位 |
+| 成员头像 | ✅ 真实图片 | ⚠️ 占位 |
+| 球队队旗图 | ✅ 真实图片 | ⚠️ 占位 |
+| favicon | ✅ 已部署 | ✅ SVG 版已部署 |
+| 公告系统 | ✅ 实时 | ✅ 实时 |
+
+---
+
+## 🔄 同步流程示意
+
+```
+                    ┌──────────────────────────┐
+                    │  本地开发 (/Documents/)   │
+                    └────────────┬─────────────┘
+                                 │ git push
+                                 ▼
+                    ┌──────────────────────────┐
+                    │  GitHub: sunexe/team85.cn │ (私有)
+                    └────┬─────────────────┬───┘
+                         │                 │
+                         │ (主仓库用于     │ (推送到预览仓库)
+                         │  正式部署)      │ 
+                         │                 ▼
+                    FTP/手动      ┌──────────────────────────┐
+                         │        │  GitHub: team85-preview  │ (公开)
+                         ▼        └────────────┬─────────────┘
+              ┌────────────────┐               │ 自动构建
+              │ 生产服务器      │               ▼
+              │ www.team85.cn  │     ┌─────────────────────┐
+              └────────────────┘     │ github.io/team85-   │
+                                     │ preview/            │
+                                     └─────────────────────┘
+```
+
+---
+
