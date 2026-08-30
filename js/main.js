@@ -239,6 +239,10 @@ function loadMatchesGrid() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    if (typeof window.attachInteraction === 'function') {
+      window.attachInteraction(matchCard, match.imageUrl);
+    }
+
     grid.appendChild(matchCard);
   });
 }
