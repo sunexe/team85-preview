@@ -85,7 +85,7 @@ data/interactions/               # 运行时数据（访客产生，PHP 写入�
 
 ## 数据与安全
 
-- 评论内容一律经 `htmlspecialchars` 转义后落盘，避免 XSS
+- 评论内容存**原始文本**（仅 trim），渲染时经前端 `escapeHtml` 转义防 XSS（避免存储转义 + 渲染转义的双重转义）
 - PHP 读写 JSON 用 `flock` 文件锁，避免并发写覆盖
 - 评论记录含 `id`（`uniqid()`）+ `time`（ISO 8601，与现有 `feedback.json` 一致）
 - 数据校验：昵称/内容非空、长度上限、非法字符过滤

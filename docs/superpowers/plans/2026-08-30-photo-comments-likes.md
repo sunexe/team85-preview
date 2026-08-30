@@ -63,10 +63,6 @@ function check($name, $cond) {
 
 require __DIR__ . '/../api/interaction_lib.php';
 
-echo "sanitize_text:\n";
-check('转义 <script>', sanitize_text('<script>alert(1)</script>') === '&lt;script&gt;alert(1)&lt;/script&gt;');
-check('去首尾空格', sanitize_text('  你好  ') === '你好');
-
 echo "contains_sensitive_words:\n";
 check('命中敏感词', contains_sensitive_words('这是赌博广告', ['赌博', '彩票']) === true);
 check('不命中', contains_sensitive_words('正常内容', ['赌博', '彩票']) === false);
@@ -127,10 +123,6 @@ const INTERACTION_RATE_LIMIT_FILE = INTERACTION_DATA_DIR . 'rate-limit.json';
 const INTERACTION_MAX_NAME_LEN = 30;
 const INTERACTION_MAX_CONTENT_LEN = 500;
 const INTERACTION_RATE_LIMIT_SECONDS = 60;
-
-function sanitize_text(string $text): string {
-    return htmlspecialchars(trim($text), ENT_QUOTES, 'UTF-8');
-}
 
 function contains_sensitive_words(string $text, array $words): bool {
     foreach ($words as $word) {
@@ -270,8 +262,8 @@ function post_comment(string $photo, string $name, string $content, string $capt
         return ['ok' => false, 'error' => $error, 'status' => 400];
     }
 
-    $name = sanitize_text($name);
-    $content = sanitize_text($content);
+    $name = trim($name);
+    $content = trim($content);
     $comments = read_json(INTERACTION_COMMENTS_FILE);
     $comments[$photo][] = ['id' => uniqid(), 'name' => $name, 'content' => $content, 'time' => date('c')];
     write_json(INTERACTION_COMMENTS_FILE, $comments);
@@ -934,7 +926,7 @@ php -S localhost:8000
 
 ## 自审记录
 
-- **Spec 覆盖**：照片评论 ✓（Task 2/4）、照片点赞 ✓（Task 2/4）、历史相册集成 ✓（Task 6）、主页比赛照片集成 ✓（Task 7）、算术验证码 ✓（Task 2）、IP 限频 ✓（Task 2）、敏感词 ✓（Task 1/2）、`htmlspecialchars` 转义 ✓（Task 1）、flock 锁 ✓（Task 1）、rsync 排除 ✓（Task 8）、PHP 写权限提醒 ✓（Task 9 Step 4）。
+- **Spec 覆盖**：照片评论 ✓（Task 2/4）、照片点赞 ✓（Task 2/4）、历史相册集成 ✓（Task 6）、主页比赛照片集成 ✓（Task 7）、算术验证码 ✓（Task 2）、IP 限频 ✓（Task 2）、敏感词 ✓（Task 1/2）、渲染时转义防 XSS ✓（Task 4）、flock 锁 ✓（Task 1）、rsync 排除 ✓（Task 8）、PHP 写权限提醒 ✓（Task 9 Step 4）。
 - **类型一致性**：`normalize_photo_key` / `normalizePhotoKey` 前后端命名对应；`attachInteraction(container, src)` 签名在 Task 4 定义、Task 6/7 调用一致。
 - **占位符**：无 TBD/TODO。
 

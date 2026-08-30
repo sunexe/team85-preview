@@ -9,10 +9,6 @@ function check($name, $cond) {
 
 require __DIR__ . '/../api/interaction_lib.php';
 
-echo "sanitize_text:\n";
-check('转义 <script>', sanitize_text('<script>alert(1)</script>') === '&lt;script&gt;alert(1)&lt;/script&gt;');
-check('去首尾空格', sanitize_text('  你好  ') === '你好');
-
 echo "contains_sensitive_words:\n";
 check('命中敏感词', contains_sensitive_words('这是赌博广告', ['赌博', '彩票']) === true);
 check('不命中', contains_sensitive_words('正常内容', ['赌博', '彩票']) === false);

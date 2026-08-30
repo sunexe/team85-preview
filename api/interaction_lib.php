@@ -9,10 +9,6 @@ const INTERACTION_MAX_NAME_LEN = 30;
 const INTERACTION_MAX_CONTENT_LEN = 500;
 const INTERACTION_RATE_LIMIT_SECONDS = 60;
 
-function sanitize_text(string $text): string {
-    return htmlspecialchars(trim($text), ENT_QUOTES, 'UTF-8');
-}
-
 function contains_sensitive_words(string $text, array $words): bool {
     foreach ($words as $word) {
         if ($word !== '' && strpos($text, $word) !== false) {
