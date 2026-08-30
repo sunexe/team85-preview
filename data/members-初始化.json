@@ -1,0 +1,96 @@
+{
+    "members": [
+        {
+            "name": "柴主",
+            "nickname": "西堤牛肉围",
+            "number": 1,
+            "position": "守门员",
+            "specialty": "防守",
+            "quote": "足球就是生活",
+            "avatar": "members/fanwei.jpg",
+            "videoUrl": "videos/20250517.m4v"
+        },
+         {
+            "name": "林钿",
+            "nickname": "金田佬",
+            "number": 5,
+            "position": "中后卫",
+            "specialty": "防守",
+            "quote": "football is life",
+            "avatar": "members/lintian.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "老张",
+            "nickname": "千杯不倒翁",
+            "number": 5,
+            "position": "中场",
+            "specialty": "组织",
+            "quote": "football is life",
+            "avatar": "members/laozhang.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "程",
+            "nickname": "大程",
+            "number": 9,
+            "position": "前锋",
+            "specialty": "球队头号射手",
+            "quote": "进攻！进攻！进攻！",
+            "avatar": "members/chenchen.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "飞",
+            "nickname": "小飞机",
+            "number": 8,
+            "position": "后卫",
+            "specialty": "学霸级防守",
+            "quote": "football is life",
+            "avatar": "members/xiexiaofei.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "盛",
+            "nickname": "腊哥",
+            "number": 14,
+            "position": "后卫",
+            "specialty": "一字马防守",
+            "quote": "football is life",
+            "avatar": "members/huasheng.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "海刚",
+            "nickname": "大隐于网",
+            "number": 6,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "养生球课代表",
+            "avatar": "members/haigang.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "航",
+            "nickname": "C罗航",
+            "number": 7,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "football is life",
+            "avatar": "members/zhenghang.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        },
+         {
+            "name": "谢主",
+            "nickname": "··· ",
+            "number": 12,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "football is life",
+            "avatar": "members/ct.jpg",
+            "videoUrl": "videos/xh_highlights.mp4"
+        }
+
+
+    ]
+}

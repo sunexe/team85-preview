@@ -1,0 +1,46 @@
+# ====================================================================
+# 汕头一中八五足球队网站 - Apache 配置示例
+# ====================================================================
+# 在生产服务器上将此文件复制为 .htaccess 即可生效。
+# Apache + Nginx 反代环境通常不需要额外配置，本文件主要演示
+# 一些可按需启用的规则集合（如 HTTPS 强跳、自定义错误页等）。
+# ====================================================================
+
+# ---- 启用 gzip 压缩 ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json text/plain text/xml image/svg+xml
+</IfModule>
+
+# ---- 静态资源长缓存 ----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType image/png              "access plus 1 year"
+  ExpiresByType image/jpeg             "access plus 1 year"
+  ExpiresByType image/svg+xml          "access plus 1 year"
+  ExpiresByType image/webp             "access plus 1 year"
+  ExpiresByType image/x-icon           "access plus 1 year"
+  ExpiresByType text/html              "access plus 1 hour"
+  ExpiresByType application/json       "access plus 1 hour"
+</IfModule>
+
+# ---- 安全响应头（可选） ----
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # 启用 HSTS（首次 HTTPS 配置完成后开启）
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# ---- 友好错误页 ----
+ErrorDocument 404 /404.html
+
+# ---- 默认首页 ----
+DirectoryIndex index.html
+
+# ---- UTF-8 ----
+AddDefaultCharset UTF-8

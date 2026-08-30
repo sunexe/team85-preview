@@ -1,0 +1,140 @@
+/* 导航栏样式 */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo img {
+    height: 30px;
+    width: auto;
+}
+
+.logo h1 {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-select {
+    padding: 4px 24px 4px 8px;
+    font-size: 15px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 16px;
+}
+
+.nav-select:hover {
+    color: #666;
+}
+
+.nav-select:focus {
+    outline: none;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 6px 12px;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+/* 主要内容区域 */
+main {
+    margin-top: var(--header-height);
+}
+
+/* 页脚样式 */
+footer {
+    background: var(--primary-bg);
+    color: var(--text-color);
+    padding: 40px 20px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.contact, .links {
+    flex: 1;
+    padding: 20px 0;
+}
+
+.contact h3, .links h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.contact p {
+    color: #666;
+    margin: 8px 0;
+}
+
+.links a {
+    color: #0066cc;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #004499;
+}
+
+.copyright {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.copyright p {
+    margin: 5px 0;
+}

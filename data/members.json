@@ -1,0 +1,314 @@
+{
+    "members": [
+        {
+            "name": "柴主",
+            "nickname": "西堤牛肉围",
+            "number": 1,
+            "position": "守门员",
+            "specialty": "防守",
+            "quote": "足球就是深夜里的一碗干面，加肉的",
+            "avatar": "members/fanwei.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "黎明",
+            "nickname": "天王",
+            "number": 2,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "手术刀般的精准防守",
+            "avatar": "members/liming.jpg",
+            "videoUrl": "videos/医生朋友们2023.m4v"
+        },
+        {
+            "name": "老张",
+            "nickname": "千杯不倒翁",
+            "number": 3,
+            "position": "中场",
+            "specialty": "组织",
+            "quote": "传球如倒酒，一滴不漏",
+            "avatar": "members/laozhang.jpg",
+            "videoUrl": "videos/张2023.m4v"
+        },
+        {
+            "name": "钿",
+            "nickname": "金田佬",
+            "number": 5,
+            "position": "中后卫",
+            "specialty": "防守",
+            "quote": "防守如城墙，稳固无比",
+            "avatar": "members/lintian.jpg",
+            "videoUrl": "videos/钿2023.m4v"
+        },
+        {
+            "name": "刚",
+            "nickname": "大隐于网",
+            "number": 6,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "养生球课代表，踢到99",
+            "avatar": "members/gang.jpg",
+            "videoUrl": "videos/SHG2023.m4v"
+        },
+        {
+            "name": "航",
+            "nickname": "C罗航",
+            "number": 7,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "我就是C罗，进球如麻！",
+            "avatar": "members/hang.jpg",
+            "videoUrl": "videos/航2023.m4v"
+        },
+        {
+            "name": "飞",
+            "nickname": "小飞机",
+            "number": 8,
+            "position": "后卫",
+            "specialty": "学霸级防守",
+            "quote": "学霸防守公式：断球=预判³+滑铲²",
+            "avatar": "members/fei.jpg",
+            "videoUrl": "videos/小飞2023.m4v"
+        },
+        {
+            "name": "程",
+            "nickname": "大程",
+            "number": 9,
+            "position": "前锋",
+            "specialty": "球队头号射手",
+            "quote": "进攻！进攻！进攻！",
+            "avatar": "members/chenchen.jpg",
+            "videoUrl": "videos/程2023.m4v"
+        },
+        {
+            "name": "乔",
+            "nickname": "水多多",
+            "number": 10,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "再坚持一下，这句话是我说的",
+            "avatar": "members/qiaolin.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "胜",
+            "nickname": "猫",
+            "number": 11,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "猫有九条命，我有九个进球方式！",
+            "avatar": "members/qunsheng.jpg",
+            "videoUrl": "videos/群胜2023.m4v"
+        },
+        {
+            "name": "宇",
+            "nickname": "···",
+            "number": 12,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "进球就是我的全部",
+            "avatar": "members/xzy.jpg",
+            "videoUrl": "videos/泽宇2023.m4v"
+        },
+        {
+            "name": "盛",
+            "nickname": "腊哥",
+            "number": 14,
+            "position": "后卫",
+            "specialty": "一字马防守",
+            "quote": "专治各种花式过人",
+            "avatar": "members/sheng.jpg",
+            "videoUrl": "videos/盛2023.m4v"
+        },
+        {
+            "name": "一诚",
+            "nickname": "",
+            "number": 15,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "一直诚信地踢球",
+            "avatar": "members/yicheng.jpg",
+            "videoUrl": "videos/Allfriends2023.m4v"
+        },
+        {
+            "name": "骐",
+            "nickname": "骐哥",
+            "number": 16,
+            "position": "中场",
+            "specialty": "组织",
+            "quote": "中场魔术师：把对手变观众",
+            "avatar": "members/wangqi.jpg",
+            "videoUrl": "videos/Allfriends2023.m4v"
+        },
+        {
+            "name": "Lordy",
+            "nickname": "罗弟",
+            "number": 17,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "我的球衣是肉色的，防守不是肉的！",
+            "avatar": "members/lordy.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "宏",
+            "nickname": "阿宏",
+            "number": 18,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "足球是我的信仰，进球是我的使命！",
+            "avatar": "members/guohong.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "波",
+            "nickname": "波哥美",
+            "number": 19,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "最美踢球人",
+            "avatar": "members/linbo.jpg",
+            "videoUrl": "videos/凌波2023.m4v"
+        },
+        {
+            "name": "鸿",
+            "nickname": "鸡哥",
+            "number": 20,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "我是前锋终结者！",
+            "avatar": "members/xiaohong.jpg",
+            "videoUrl": "videos/鸿2023.m4v"
+        },
+        {
+            "name": "展",
+            "nickname": "劳模",
+            "number": 22,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "劳模就是我的标配",
+            "avatar": "members/guozhan.jpg",
+            "videoUrl": "videos/国展2023.m4v"
+        },
+        {
+            "name": "巫师",
+            "nickname": "伟哥",
+            "number": 30,
+            "position": "中锋",
+            "specialty": "组织进攻",
+            "quote": "一生一世赢，13140！",
+            "avatar": "members/zengwei.jpg",
+            "videoUrl": "videos/曾玮2023.m4v"
+        },
+         {
+            "name": "晖",
+            "nickname": "晖总",
+            "number": 31,
+            "position": "中场",
+            "specialty": "组织",
+            "quote": "球不到位是我错，酒不到位是你错！",
+            "avatar": "members/hui.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "寰",
+            "nickname": "寰寰",
+            "number": 33,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "积极奔跑，永不言弃！",
+            "avatar": "members/shuhuan.jpg",
+            "videoUrl": "videos/书寰2023.m4v"
+        },
+        {
+            "name": "晓丰",
+            "nickname": "风",
+            "number": 36,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "风驰电掣，进球如风！",
+            "avatar": "members/feng.jpg",
+            "videoUrl": "videos/林晓峰2023.m4v"
+        },
+        {
+            "name": "光",
+            "nickname": "小象",
+            "number": 55,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "足球就是这么简单，踢到哪算哪！",
+            "avatar": "members/guang.jpg",
+            "videoUrl": "videos/医生朋友们2023.m4v"
+        },
+          {
+            "name": "罗滨",
+            "nickname": "罗宾汉",
+            "number": 56,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "劫富济贫：抢对手的球，济我队比分",
+            "avatar": "members/luobin.jpg",
+            "videoUrl": "videos/医生朋友们2023.m4v"
+        },
+        {
+            "name": "振哥",
+            "nickname": "牛弟",
+            "number": 58,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "基情防守，斗志昂扬！",
+            "avatar": "members/zhen.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "安主",
+            "nickname": "安哥",
+            "number": 70,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "安全、健康，快乐踢球！",
+            "avatar": "members/baoan.jpg",
+            "videoUrl": "videos/医生朋友们2023.m4v"
+        },
+        {
+            "name": "华",
+            "nickname": "华仔",
+            "number": 85,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "踢球四十年，还是练习生",
+            "avatar": "members/guanhua.jpg",
+            "videoUrl": "videos/华2023.m4v"
+        },
+        {
+            "name": "良友",
+            "nickname": "好朋友",
+            "number": 86,
+            "position": "后卫",
+            "specialty": "防守",
+            "quote": "最佳损友：断你球还笑你菜",
+            "avatar": "members/liangyou.jpg",
+            "videoUrl": "videos/AllFriends2023.m4v"
+        },
+        {
+            "name": "文",
+            "nickname": "顿齐兄",
+            "number": 88,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "顿齐！顿齐！顿齐！再坚持一下！",
+            "avatar": "members/tengwen.jpg",
+            "videoUrl": "videos/腾文2023.m4v"
+        },
+        {
+            "name": "奋",
+            "nickname": "奋斗",
+            "number": 101,
+            "position": "前锋",
+            "specialty": "进攻",
+            "quote": "进球可能会迟到，但永远不会缺席！",
+            "avatar": "members/fen.jpg",
+            "videoUrl": "videos/陈奋2023.m4v"
+        }
+    ]
+}

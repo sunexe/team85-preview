@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>汕头一中八五足球队</title>
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/members-gallery.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zhong&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content="汕头一中八五足球队官方网站，展示球队历史、成员信息和比赛记录"
+    />
+    <meta property="og:title" content="汕头一中八五足球队" />
+    <meta
+      property="og:description"
+      content="因为热爱所以坚持，愿时光能缓，故人不散"
+    />
+    <meta property="og:image" content="images/1st85logo.png" />
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsTeam",
+        "name": "汕头一中八五足球队"
+      }
+    </script>
+    <script>
+      window.onload = function () {
+        const styles = document.styleSheets;
+        if (styles.length === 0) {
+          console.error("CSS未能正确加载");
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <img src="images/1st85logo.png" alt="一中八五足球队" />
+          <h1>汕头一中八五足球队</h1>
+        </div>
+        <div class="nav-controls">
+          <select id="yearSelect" class="nav-select">
+            <option value="2026" selected>2026年</option>
+            <option value="2025">2025年</option>
+            <option value="2024">2024年</option>
+            <option value="2023">2023年</option>
+            <option value="2022">2022年</option>
+            <option value="2021">2021年</option>
+            <option value="earlier">更早的</option>
+          </select>
+          <a href="history.html" class="nav-link">关于我们</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <button class="nav-btn next-btn">&gt;</button>
+        <button class="nav-btn prev-btn">&lt;</button>
+        <div class="slider"></div>
+        <div class="match-info"></div>
+      </section>
+
+      <!-- 公告Banner区域 -->
+      <div id="announcement-banner"></div>
+
+      <section class="matches-grid">
+        <!-- 比赛图片网格将通过JavaScript动态加载 -->
+      </section>
+
+      <section class="members-section">
+        <div class="section-header">
+          <h2>球队成员</h2>
+        </div>
+        <div class="members-scroll">
+          <div class="members-container">
+            <!-- 成员数据将通过JavaScript动态加载 -->
+          </div>
+        </div>
+        <p style="text-align: center">← 滑动查看更多成员 →</p>
+      </section>
+
+      <div class="year-nav">
+        <span>请选择年份：</span>
+        <select id="yearSelect" class="year-select">
+          <option value="2026" selected>2026年</option>
+          <option value="2025">2025年</option>
+          <option value="2024">2024年</option>
+          <option value="2023">2023年</option>
+          <option value="2022">2022年</option>
+          <option value="2021">2021年</option>
+          <option value="earlier">更早的</option>
+        </select>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="contact">
+          <h3>联系我们</h3>
+          <p>邮箱：sunexe@139.com</p>
+        </div>
+        <div class="links">
+          <h3>友情链接</h3>
+          <a href="#">金田茶铺</a>
+          <a href="#">正典酒庄</a>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2019-2026 汕头一中八五足球队 版权所有。</p>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="35fe5332-9c45-4ac5-ba8a-8059246a6be3"></script>
+
+        <p>
+          <a
+            href="https://beian.miit.gov.cn/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >粤ICP备2025429887号</a
+          >
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>

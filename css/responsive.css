@@ -1,0 +1,149 @@
+/* 响应式媒体查询 */
+@media (max-width: 1024px) {
+    #gallery-top,
+    #gallery-middle,
+    #gallery-bottom {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .matches-grid {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0 20px;
+        gap: 15px;
+        padding: 20px 0;
+    }
+
+    .match-card {
+        aspect-ratio: 3/4;
+    }
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .prev-btn {
+        left: 10px;
+    }
+
+    .next-btn {
+        right: 10px;
+    }
+    
+    .nav-select {
+        display: none;
+    }
+    
+    .year-nav {
+        display: block;
+    }
+    .year-select {
+        display: block;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .members-container {
+        padding: 0 20px;
+        gap: 20px;
+    }
+    
+    .member-item {
+        width: 240px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .story-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .timeline::before {
+        left: 20px;
+    }
+    
+    .timeline-item {
+        flex-direction: row !important;
+        margin-left: 40px;
+    }
+    
+    .timeline-marker {
+        left: 20px;
+    }
+    
+    .timeline-content {
+        width: auto;
+        margin: 0;
+    }
+
+    #gallery-top,
+    #gallery-middle,
+    #gallery-bottom {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0 20px 20px 20px;
+        gap: 15px;
+    }
+    
+    .close-btn {
+        top: -30px;
+        right: -30px;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+
+    .members-scroll {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .members-scroll::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .matches-grid {
+        grid-template-columns: 1fr;
+        margin: 0 15px;
+        gap: 20px;
+    }
+
+    .match-card {
+        aspect-ratio: 4/5;
+    }
+
+    .match-card-info {
+        padding: 12px;
+    }
+
+    .match-date {
+        font-size: 0.9rem;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    #gallery-top,
+    #gallery-middle,
+    #gallery-bottom {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}

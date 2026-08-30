@@ -1,0 +1,100 @@
+# ======== 操作系统产物 ========
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+._*
+
+# ======== 编辑器 / IDE ========
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.iml
+.cursor
+.aiexclude
+
+# ======== Node.js ========
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.yarn/
+.pnpm-store/
+
+# ======== 临时与备份 ========
+*.tmp
+*.bak
+*.backup
+*.orig
+*.log
+*.pid
+*.seed
+*.pid.lock
+.cache/
+
+# ======== 自动备份目录（开发工具产生） ========
+.backup-*/
+.backups/
+*.backup-*
+
+# ======== 本地环境变量 ========
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+
+# ======== 服务器特定配置（每台服务器不同） ========
+.htaccess
+.user.ini
+.well-known/
+
+# ======== 部署脚本（个人配置） ========
+deploy-*.sh
+deploy-*.ps1
+*.local
+
+# ======== 资源图片（不追踪二进制大文件） ========
+matches/
+members/
+team/
+images/*.png
+images/*.jpg
+images/*.jpeg
+images/*.gif
+images/*.webp
+images/*.ico
+images/*.svg
+favicon.ico
+apple-touch-icon*.png
+apple-touch-icon*.jpg
+
+# ======== 视频文件（体积大，不进 Git） ========
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+
+# ======== 文档类（不进 Git） ========
+*.pdf
+*.docx
+*.xlsx
+
+# ======== 杂项 ========
+*.tgz
+.AppleDouble
+.LSOverride
+Icon
+DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
