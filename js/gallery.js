@@ -62,6 +62,11 @@ function createGalleryItem(imageSrc, caption) {
     `;
     
     item.addEventListener('click', () => openLightbox(imageSrc, caption));
+
+    if (typeof window.attachInteraction === 'function') {
+        window.attachInteraction(item, imageSrc);   // 挂载点赞/评论
+    }
+
     return item;
 }
 
