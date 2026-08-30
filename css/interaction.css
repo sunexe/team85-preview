@@ -27,6 +27,11 @@
   background: rgba(0, 0, 0, 0.75);
 }
 
+.photo-interaction button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 /* 评论弹窗 */
 .comment-modal {
   position: fixed;
@@ -35,7 +40,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 3000;
   padding: 20px;
 }
 
@@ -130,6 +135,7 @@
 
 .captcha-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
@@ -151,4 +157,9 @@
   color: #fff;
   font-size: 15px;
   cursor: pointer;
+}
+
+.comment-form button[type=submit]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
