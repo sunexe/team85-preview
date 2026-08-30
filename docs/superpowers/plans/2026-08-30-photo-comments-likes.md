@@ -330,7 +330,7 @@ function respond(array $result): void {
     $status = $result['status'] ?? 200;
     unset($result['status']);
     http_response_code($status);
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
     exit;
 }
 
@@ -338,8 +338,19 @@ function client_ip(): string {
     return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 }
 
-$action = $_GET['action'] ?? ($_POST['action'] ?? '');
-$photo = normalize_photo_key($_GET['photo'] ?? ($_POST['photo'] ?? ''));
+// 外部输入归一化为 string：数组等畸形值归一为空串，交由后续校验拦截（避免 string 类型声明的 TypeError）
+function str_input($value): string {
+    return is_string($value) ? $value : '';
+}
+
+$action = str_input($_GET['action'] ?? ($_POST['action'] ?? ''));
+$photo = normalize_photo_key(str_input($_GET['photo'] ?? ($_POST['photo'] ?? '')));
+
+// 需要照片标识的 action 做非空校验（防把评论/点赞存到空 key）
+$requiresPhoto = in_array($action, ['get_comments', 'post_comment', 'get_likes', 'post_like'], true);
+if ($requiresPhoto && $photo === '') {
+    respond(['ok' => false, 'error' => '缺少照片标识', 'status' => 400]);
+}
 
 switch ($action) {
     case 'get_captcha':
@@ -347,7 +358,7 @@ switch ($action) {
     case 'get_comments':
         respond(get_comments($photo));
     case 'post_comment':
-        respond(post_comment($photo, $_POST['name'] ?? '', $_POST['content'] ?? '', $_POST['captcha'] ?? '', client_ip()));
+        respond(post_comment($photo, str_input($_POST['name'] ?? ''), str_input($_POST['content'] ?? ''), str_input($_POST['captcha'] ?? ''), client_ip()));
     case 'get_likes':
         respond(get_likes($photo));
     case 'post_like':
@@ -394,6 +405,10 @@ git commit -m "feat: 新增照片评论/点赞 PHP HTTP 入口"
 // 照片评论/点赞 —— 前端模块
 const INTERACTION_API = 'api/interaction.php';
 
+// 评论弹窗打开序号，用于丢弃过期的异步结果（快速切换照片时防止错位）
+let modalRequestId = 0;
+let lastFocusedElement = null;
+
 function normalizePhotoKey(src) {
   return String(src || '').replace(/^\/+/, '');
 }
@@ -420,12 +435,12 @@ function apiGetCaptcha() {
 }
 
 function apiPostComment(photoKey, name, content, captcha) {
-  const body = new URLSearchParams({ action: 'post_comment', photo: photoKey, name, content, captcha });
+  const body = new window.URLSearchParams({ action: 'post_comment', photo: photoKey, name, content, captcha });
   return requestJSON(INTERACTION_API, { method: 'POST', body });
 }
 
 function apiPostLike(photoKey) {
-  const body = new URLSearchParams({ action: 'post_like', photo: photoKey });
+  const body = new window.URLSearchParams({ action: 'post_like', photo: photoKey });
   return requestJSON(INTERACTION_API, { method: 'POST', body });
 }
 
@@ -452,9 +467,9 @@ function attachInteraction(container, src) {
     try {
       const res = await apiPostLike(photoKey);
       if (res.ok) likeCount.textContent = res.count;
-      else alert(res.error || '点赞失败');
+      else window.alert(res.error || '点赞失败');
     } catch (e) {
-      alert('点赞失败，请稍后再试');
+      window.alert('点赞失败，请稍后再试');
     }
   });
 
@@ -469,6 +484,9 @@ function ensureCommentModal() {
   modal = document.createElement('div');
   modal.id = 'comment-modal';
   modal.className = 'comment-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', '照片评论');
   modal.innerHTML = `
     <div class="comment-modal-content">
       <button class="comment-modal-close" type="button" aria-label="关闭">&times;</button>
@@ -486,25 +504,46 @@ function ensureCommentModal() {
     </div>
   `;
   document.body.appendChild(modal);
-  modal.querySelector('.comment-modal-close').addEventListener('click', () => modal.classList.remove('active'));
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+  modal.querySelector('.comment-modal-close').addEventListener('click', closeCommentModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeCommentModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeCommentModal();
+  });
   return modal;
+}
+
+function closeCommentModal() {
+  const modal = document.getElementById('comment-modal');
+  if (modal) modal.classList.remove('active');
+  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+    lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
 }
 
 async function openCommentModal(photoKey) {
   const modal = ensureCommentModal();
+  const requestId = ++modalRequestId;
+  lastFocusedElement = document.activeElement;
   modal.dataset.photo = photoKey;
   modal.querySelector('.comment-form').dataset.photo = photoKey;
   modal.classList.add('active');
+  modal.querySelector('.comment-modal-close').focus();
 
   const list = modal.querySelector('.comment-list');
   list.innerHTML = '<p class="comment-empty">加载中…</p>';
   const res = await apiGetComments(photoKey).catch(() => null);
-  renderComments(list, res && res.ok ? res.comments : []);
+  if (requestId !== modalRequestId) return;
+  if (!res || !res.ok) {
+    list.innerHTML = '<p class="comment-empty">评论加载失败，请重试</p>';
+  } else {
+    renderComments(list, res.comments);
+  }
 
   const q = modal.querySelector('.captcha-question');
   q.textContent = '加载验证码…';
   const c = await apiGetCaptcha().catch(() => null);
+  if (requestId !== modalRequestId) return;
   q.textContent = c && c.ok ? c.question : '验证码加载失败';
 }
 
@@ -524,7 +563,7 @@ function renderComments(listEl, comments) {
 
 function escapeHtml(str) {
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = str == null ? '' : str;
   return div.innerHTML;
 }
 
@@ -541,20 +580,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type=submit]');
     const photoKey = form.dataset.photo;
     const name = form.querySelector('[name=name]').value.trim();
     const content = form.querySelector('[name=content]').value.trim();
     const captcha = form.querySelector('[name=captcha]').value.trim();
-    if (!name || !content || !captcha) { alert('请填写昵称、内容和验证码'); return; }
-    const res = await apiPostComment(photoKey, name, content, captcha).catch(() => null);
-    if (!res || !res.ok) { alert((res && res.error) || '发表失败，请稍后再试'); return; }
-    form.reset();
-    const list = document.querySelector('#comment-modal .comment-list');
-    const fresh = await apiGetComments(photoKey).catch(() => null);
-    renderComments(list, fresh && fresh.ok ? fresh.comments : []);
-    const q = document.querySelector('#comment-modal .captcha-question');
-    const c = await apiGetCaptcha().catch(() => null);
-    q.textContent = c && c.ok ? c.question : '验证码加载失败';
+    if (!name || !content || !captcha) { window.alert('请填写昵称、内容和验证码'); return; }
+    submitBtn.disabled = true;
+    try {
+      const res = await apiPostComment(photoKey, name, content, captcha).catch(() => null);
+      if (!res || !res.ok) { window.alert((res && res.error) || '发表失败，请稍后再试'); return; }
+      form.reset();
+      const list = document.querySelector('#comment-modal .comment-list');
+      const fresh = await apiGetComments(photoKey).catch(() => null);
+      renderComments(list, fresh && fresh.ok ? fresh.comments : []);
+      const q = document.querySelector('#comment-modal .captcha-question');
+      const c = await apiGetCaptcha().catch(() => null);
+      q.textContent = c && c.ok ? c.question : '验证码加载失败';
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 });
 ```
@@ -612,6 +657,11 @@ git commit -m "feat: 新增照片评论/点赞前端模块"
   background: rgba(0, 0, 0, 0.75);
 }
 
+.photo-interaction button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 /* 评论弹窗 */
 .comment-modal {
   position: fixed;
@@ -620,7 +670,7 @@ git commit -m "feat: 新增照片评论/点赞前端模块"
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 3000;
   padding: 20px;
 }
 
@@ -715,6 +765,7 @@ git commit -m "feat: 新增照片评论/点赞前端模块"
 
 .captcha-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
@@ -736,6 +787,11 @@ git commit -m "feat: 新增照片评论/点赞前端模块"
   color: #fff;
   font-size: 15px;
   cursor: pointer;
+}
+
+.comment-form button[type=submit]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 ```
 
@@ -769,8 +825,8 @@ function createGalleryItem(imageSrc, caption) {
 
     item.addEventListener('click', () => openLightbox(imageSrc, caption));
 
-    if (typeof attachInteraction === 'function') {
-        attachInteraction(item, imageSrc);   // ← 新增：挂载点赞/评论
+    if (typeof window.attachInteraction === 'function') {
+        window.attachInteraction(item, imageSrc);   // ← 新增：挂载点赞/评论
     }
 
     return item;
@@ -820,8 +876,8 @@ git commit -m "feat: 历史页相册集成照片评论/点赞"
 在 `js/main.js` 的 `loadMatchesGrid` 里、`grid.appendChild(matchCard);` 之前追加：
 
 ```js
-    if (typeof attachInteraction === 'function') {
-        attachInteraction(matchCard, match.imageUrl);   // ← 新增
+    if (typeof window.attachInteraction === 'function') {
+        window.attachInteraction(matchCard, match.imageUrl);   // ← 新增
     }
 ```
 
