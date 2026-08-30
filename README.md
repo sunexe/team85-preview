@@ -61,10 +61,20 @@ team85.cn/
 │   ├── announcements.json  # 最新公告
 │   └── feedback.json       # 用户反馈数据
 │
-├── images/                 # 通用图片资源（被 .gitignore 排除）
-├── matches/                # 比赛照片（按年份目录归档，被 .gitignore 排除）
-├── members/                # 成员头像（被 .gitignore 排除）
-├── team/                   # 球队活动图（被 .gitignore 排除）
+├── images/                 # 通用图片资源（本地存在，被 .gitignore 排除）
+├── matches/                # 比赛照片（本地存在，被 .gitignore 排除）
+├── members/                # 成员头像（本地存在，被 .gitignore 排除）
+├── team/                   # 球队活动图（本地存在，被 .gitignore 排除）
+│
+├── scripts/                # 本地 ↔ 服务器同步脚本（rsync over SSH）
+│   ├── push-to-server.sh   # 推本地修改到服务器
+│   ├── pull-from-server.sh # 拉服务器最新到本地（含 --only=images/data/code）
+│   ├── sync-assets.sh      # 只同步图片资源（更快）
+│   ├── verify-mirror.sh    # 对比本地 vs 服务器差异
+│   ├── preview.sh          # 启动本地预览服务器
+│   ├── deploy-common.sh    # 公共配置加载
+│   ├── .deploy.env.example # 部署配置模板（cp 为 .deploy.env 后填入真实值）
+│   └── README.md           # 脚本详细使用文档
 │
 ├── package.json            # Node.js 依赖（仅用于本地预览）
 ├── server.js               # Express 静态服务器（仅用于本地预览）
@@ -77,8 +87,10 @@ team85.cn/
 └── .gitignore              # Git 忽略规则（包含图片与服务器配置）
 ```
 
-> ⚠️ **重要**：比赛照片、成员头像等**图片资源位于工作目录但被 `.gitignore` 排除**，
-> 因为图片体积大且与个人部署环境（宝塔面板目录）紧密相关。仓库只追踪代码与数据。
+> ⚠️ **重要**：比赛照片、成员头像等**图片资源位于工作目录但被 `.gitignore` 排除**。
+> 这是有意为之——图片通常通过宝塔面板/FTP 直接上传到服务器，
+> 而本工作区是"完整镜像"（用于本地预览 + rsync 同步），不需要进 Git。
+> 这样别人 clone 仓库后只需运行 `rsync` 就能同步到自己的服务器。
 
 ---
 
@@ -165,6 +177,11 @@ npx eslint js/
 }
 ```
 
+> 📌 **可选字段 `videoUrl`**：点击成员卡片时在新窗口打开的链接。
+> 必须指向**真实存在**的地址（服务器上的视频文件或抖音等外链）。
+> 2026-08 清理时因 `videos/` 目录从未部署，已移除全部 31 处死链字段；
+> 以后要加视频，先确认文件已在服务器上再填此字段。
+
 ### 公告数据（`data/announcements.json`）
 
 ```json
@@ -193,30 +210,62 @@ npx eslint js/
 2. **分类存放**：将照片放入 `matches/2026/` 对应目录。
 3. **更新数据**：编辑 `data/matches.json`，在对应比赛记录的 `imageUrl` 字段填入路径。
 4. **压缩优化**：上传前建议压缩到 ≤ 500 KB（推荐工具：[Squoosh](https://squoosh.app/)）。
-5. **部署**：通过 FTP / 宝塔面板将 `data/` 与 `matches/` 同步到服务器。
+5. **部署**：通过 `./scripts/sync-assets.sh push` 一键同步到服务器。
 
 ---
 
 ## 部署流程
 
-### 推荐方案：宝塔面板 + Git 钩子（推荐）
+### 工作区即线上镜像（当前方案）
+
+本工作区是 `https://www.team85.cn/` 的**完整本地镜像**：
+- 包含所有 HTML / CSS / JS / JSON / 图片（即使 `.gitignore` 排除了二进制文件，它们仍然存放在 `matches/`、`members/`、`team/`、`images/` 里）
+- 通过 `scripts/` 下的 rsync 脚本实现本地 ↔ 服务器双向同步
+- 服务器在 `/www/wwwroot/www.team85.cn/`，SSH 用户 `root`，主机 `team85.cn`
+
+### 首次使用部署脚本
+
+```bash
+# 1. 复制配置模板
+cp scripts/.deploy.env.example scripts/.deploy.env
+
+# 2. 校验 SSH 连通性
+ssh -p 22 -i ~/.ssh/id_ed25519 root@team85.cn 'echo OK'
+
+# 3. 测试推送（DRY-RUN 不会真改）
+./scripts/push-to-server.sh --dry-run
+
+# 4. 实际推送
+./scripts/push-to-server.sh
+```
+
+### 日常部署
+
+| 场景 | 命令 |
+|---|---|
+| 推代码到服务器 | `./scripts/push-to-server.sh --yes` |
+| 推完后再传图 | `./scripts/sync-assets.sh push` |
+| 服务器改了图/数据同步回本地 | `./scripts/pull-from-server.sh --only=images` 或 `--only=data` |
+| 推送前对比 | `./scripts/verify-mirror.sh` |
+| 本地预览 | `./scripts/preview.sh` |
+
+详细文档见 [`scripts/README.md`](scripts/README.md)。
+
+### 推荐方案：宝塔面板 + Git 钩子（未启用）
 
 1. 在服务器 `/www/wwwroot/www.team85.cn/` 创建 Git 裸仓库
 2. 添加 `post-receive` 钩子，自动 checkout 到网站目录
 3. 本地 `git push production main` 即可一键部署
 
-详见 [`CONTRIBUTING.md`](CONTRIBUTING.md) （待补充）。
+> 当前阶段 rsync 同步更灵活——服务器上的图片经常直接上传，
+> 用 Git 钩子会把本地的过时副本强制覆盖到服务器，反而麻烦。
 
-### 临时方案：手动 FTP 上传
+### 临时方案：手动 rsync（脚本未覆盖到的场景）
 
 ```bash
-# 用 rsync 上传代码与数据
 rsync -av --exclude='matches/' --exclude='members/' --exclude='team/' \
   --exclude='node_modules/' --exclude='.git/' \
-  ./ user@server:/www/wwwroot/www.team85.cn/
-
-# 上传图片（视情况选择）
-rsync -av matches/ user@server:/www/wwwroot/www.team85.cn/matches/
+  ./ root@team85.cn:/www/wwwroot/www.team85.cn/
 ```
 
 ---

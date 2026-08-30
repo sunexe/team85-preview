@@ -53,12 +53,13 @@ pnpm-debug.log*
 .user.ini
 .well-known/
 
-# ======== 部署脚本（个人配置） ========
+# ======== 部署脚本（个人配置，含真实服务器信息） ========
 deploy-*.sh
 deploy-*.ps1
 *.local
+scripts/.deploy.env                # 部署配置不入库（含真实 SSH 信息）
 
-# ======== 资源图片（不追踪二进制大文件） ========
+# ======== 资源图片（不追踪二进制大文件，保留在本地用于预览与 rsync 同步） ========
 matches/
 members/
 team/
