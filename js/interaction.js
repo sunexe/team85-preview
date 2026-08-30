@@ -1,6 +1,10 @@
 // 照片评论/点赞 —— 前端模块
 const INTERACTION_API = 'api/interaction.php';
 
+// 评论弹窗打开序号，用于丢弃过期的异步结果（快速切换照片时防止错位）
+let modalRequestId = 0;
+let lastFocusedElement = null;
+
 function normalizePhotoKey(src) {
   return String(src || '').replace(/^\/+/, '');
 }
@@ -76,6 +80,9 @@ function ensureCommentModal() {
   modal = document.createElement('div');
   modal.id = 'comment-modal';
   modal.className = 'comment-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', '照片评论');
   modal.innerHTML = `
     <div class="comment-modal-content">
       <button class="comment-modal-close" type="button" aria-label="关闭">&times;</button>
@@ -93,25 +100,46 @@ function ensureCommentModal() {
     </div>
   `;
   document.body.appendChild(modal);
-  modal.querySelector('.comment-modal-close').addEventListener('click', () => modal.classList.remove('active'));
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+  modal.querySelector('.comment-modal-close').addEventListener('click', closeCommentModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeCommentModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeCommentModal();
+  });
   return modal;
+}
+
+function closeCommentModal() {
+  const modal = document.getElementById('comment-modal');
+  if (modal) modal.classList.remove('active');
+  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+    lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
 }
 
 async function openCommentModal(photoKey) {
   const modal = ensureCommentModal();
+  const requestId = ++modalRequestId;
+  lastFocusedElement = document.activeElement;
   modal.dataset.photo = photoKey;
   modal.querySelector('.comment-form').dataset.photo = photoKey;
   modal.classList.add('active');
+  modal.querySelector('.comment-modal-close').focus();
 
   const list = modal.querySelector('.comment-list');
   list.innerHTML = '<p class="comment-empty">加载中…</p>';
   const res = await apiGetComments(photoKey).catch(() => null);
-  renderComments(list, res && res.ok ? res.comments : []);
+  if (requestId !== modalRequestId) return;
+  if (!res || !res.ok) {
+    list.innerHTML = '<p class="comment-empty">评论加载失败，请重试</p>';
+  } else {
+    renderComments(list, res.comments);
+  }
 
   const q = modal.querySelector('.captcha-question');
   q.textContent = '加载验证码…';
   const c = await apiGetCaptcha().catch(() => null);
+  if (requestId !== modalRequestId) return;
   q.textContent = c && c.ok ? c.question : '验证码加载失败';
 }
 
@@ -131,7 +159,7 @@ function renderComments(listEl, comments) {
 
 function escapeHtml(str) {
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = str == null ? '' : str;
   return div.innerHTML;
 }
 
@@ -148,19 +176,25 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type=submit]');
     const photoKey = form.dataset.photo;
     const name = form.querySelector('[name=name]').value.trim();
     const content = form.querySelector('[name=content]').value.trim();
     const captcha = form.querySelector('[name=captcha]').value.trim();
     if (!name || !content || !captcha) { window.alert('请填写昵称、内容和验证码'); return; }
-    const res = await apiPostComment(photoKey, name, content, captcha).catch(() => null);
-    if (!res || !res.ok) { window.alert((res && res.error) || '发表失败，请稍后再试'); return; }
-    form.reset();
-    const list = document.querySelector('#comment-modal .comment-list');
-    const fresh = await apiGetComments(photoKey).catch(() => null);
-    renderComments(list, fresh && fresh.ok ? fresh.comments : []);
-    const q = document.querySelector('#comment-modal .captcha-question');
-    const c = await apiGetCaptcha().catch(() => null);
-    q.textContent = c && c.ok ? c.question : '验证码加载失败';
+    submitBtn.disabled = true;
+    try {
+      const res = await apiPostComment(photoKey, name, content, captcha).catch(() => null);
+      if (!res || !res.ok) { window.alert((res && res.error) || '发表失败，请稍后再试'); return; }
+      form.reset();
+      const list = document.querySelector('#comment-modal .comment-list');
+      const fresh = await apiGetComments(photoKey).catch(() => null);
+      renderComments(list, fresh && fresh.ok ? fresh.comments : []);
+      const q = document.querySelector('#comment-modal .captcha-question');
+      const c = await apiGetCaptcha().catch(() => null);
+      q.textContent = c && c.ok ? c.question : '验证码加载失败';
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 });
