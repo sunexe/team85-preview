@@ -61,6 +61,9 @@ scripts/.deploy.env                # 部署配置不入库（含真实 SSH 信�
 # 例外：公共函数库必须入库（否则会误伤于 deploy-*.sh 规则）
 !scripts/deploy-common.sh
 
+# ======== 访客互动运行时数据（PHP 写入，不进 Git） ========
+data/interactions/
+
 # ======== 资源图片（不追踪二进制大文件，保留在本地用于预览与 rsync 同步） ========
 matches/
 members/
