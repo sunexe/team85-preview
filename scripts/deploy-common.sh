@@ -41,6 +41,8 @@ fi
 
 # 拼接 rsync 排除参数
 EXCLUDE_ARGS=("${EXCLUDES[@]}")
+# 防御性排除：访客互动运行时数据绝不能被 --delete 抹掉（即使 .deploy.env 漏配此条）
+EXCLUDE_ARGS+=("--exclude=data/interactions/")
 
 # 远程 rsync 路径
 REMOTE_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"

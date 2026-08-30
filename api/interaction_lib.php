@@ -88,12 +88,28 @@ function get_comments(string $photo): array {
     return ['ok' => true, 'comments' => $comments[$photo] ?? []];
 }
 
+// 批量返回多张照片的点赞数/评论数（一次请求，避免前端逐张 N+1 请求）
+function get_stats(array $photos): array {
+    $likes = read_json(INTERACTION_LIKES_FILE);
+    $comments = read_json(INTERACTION_COMMENTS_FILE);
+    $stats = [];
+    foreach ($photos as $p) {
+        if (!is_string($p)) continue;
+        $key = normalize_photo_key($p);
+        if ($key === '') continue;
+        $stats[$key] = [
+            'likes' => $likes[$key] ?? 0,
+            'comments' => count($comments[$key] ?? []),
+        ];
+    }
+    return ['ok' => true, 'stats' => $stats];
+}
+
 function post_comment(string $photo, string $name, string $content, string $captcha, string $ip): array {
     $limits = read_json(INTERACTION_RATE_LIMIT_FILE);
     if (is_rate_limited($ip, $limits, time(), INTERACTION_RATE_LIMIT_SECONDS)) {
         return ['ok' => false, 'error' => '操作过于频繁，请稍后再试', 'status' => 429];
     }
-    write_json(INTERACTION_RATE_LIMIT_FILE, $limits);
 
     if (!verify_captcha_answer($_SESSION['captcha_answer'] ?? null, $captcha)) {
         return ['ok' => false, 'error' => '验证码错误', 'status' => 400];
@@ -104,6 +120,9 @@ function post_comment(string $photo, string $name, string $content, string $capt
     if ($error !== null) {
         return ['ok' => false, 'error' => $error, 'status' => 400];
     }
+
+    // 所有校验通过后才写限频，避免验证码/内容输错也把用户锁 60 秒
+    write_json(INTERACTION_RATE_LIMIT_FILE, $limits);
 
     $name = trim($name);
     $content = trim($content);
@@ -121,16 +140,17 @@ function get_likes(string $photo): array {
 }
 
 function post_like(string $photo, string $ip): array {
+    $cookie = 'liked_' . md5($photo);
+    if (isset($_COOKIE[$cookie])) {
+        return ['ok' => false, 'error' => '你已经点过赞了', 'status' => 400];
+    }
+
     $limits = read_json(INTERACTION_RATE_LIMIT_FILE);
     if (is_rate_limited($ip, $limits, time(), INTERACTION_RATE_LIMIT_SECONDS)) {
         return ['ok' => false, 'error' => '操作过于频繁，请稍后再试', 'status' => 429];
     }
     write_json(INTERACTION_RATE_LIMIT_FILE, $limits);
 
-    $cookie = 'liked_' . md5($photo);
-    if (isset($_COOKIE[$cookie])) {
-        return ['ok' => false, 'error' => '你已经点过赞了', 'status' => 400];
-    }
     $likes = read_json(INTERACTION_LIKES_FILE);
     $likes[$photo] = ($likes[$photo] ?? 0) + 1;
     if (!write_json(INTERACTION_LIKES_FILE, $likes)) {

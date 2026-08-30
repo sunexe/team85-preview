@@ -49,5 +49,13 @@ echo "get_comments / post_comment:\n";
 $comments = ['p1' => [['id' => 'a', 'name' => '张三', 'content' => '好球', 'time' => '2026-08-30T00:00:00+08:00']]];
 check('评论结构含字段', isset($comments['p1'][0]['id'], $comments['p1'][0]['name'], $comments['p1'][0]['content'], $comments['p1'][0]['time']));
 
+echo "get_stats:\n";
+$stats = get_stats(['/matches/2026/__test__.jpg', 'team/__test__.jpg', '']);
+check('返回 ok', $stats['ok'] === true);
+check('去前导斜杠归一化', isset($stats['stats']['matches/2026/__test__.jpg']));
+check('空 key 跳过', !isset($stats['stats']['']));
+check('点赞为数字', is_int($stats['stats']['team/__test__.jpg']['likes']));
+check('评论为数字', is_int($stats['stats']['team/__test__.jpg']['comments']));
+
 echo "\n结果: $PASS 通过, $FAIL 失败\n";
 exit($FAIL > 0 ? 1 : 0);

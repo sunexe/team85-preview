@@ -3,7 +3,6 @@
 require __DIR__ . '/interaction_lib.php';
 
 header('Content-Type: application/json; charset=utf-8');
-session_start();
 ensure_data_dir();
 
 function respond(array $result): void {
@@ -25,6 +24,12 @@ function str_input($value): string {
 
 $action = str_input($_GET['action'] ?? ($_POST['action'] ?? ''));
 $photo = normalize_photo_key(str_input($_GET['photo'] ?? ($_POST['photo'] ?? '')));
+$photos = str_input($_GET['photos'] ?? ($_POST['photos'] ?? ''));
+
+// 仅验证码/评论需要 session（点赞去重用 cookie，不需要 session，避免只读请求也创建 session 文件）
+if ($action === 'get_captcha' || $action === 'post_comment') {
+    session_start();
+}
 
 // 需要照片标识的 action 做非空校验（防把评论/点赞存到空 key）
 $requiresPhoto = in_array($action, ['get_comments', 'post_comment', 'get_likes', 'post_like'], true);
@@ -37,6 +42,8 @@ switch ($action) {
         respond(get_captcha());
     case 'get_comments':
         respond(get_comments($photo));
+    case 'get_stats':
+        respond(get_stats(explode(',', $photos)));
     case 'post_comment':
         respond(post_comment($photo, str_input($_POST['name'] ?? ''), str_input($_POST['content'] ?? ''), str_input($_POST['captcha'] ?? ''), client_ip()));
     case 'get_likes':

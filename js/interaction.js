@@ -22,8 +22,9 @@ function apiGetComments(photoKey) {
   return requestJSON(`${INTERACTION_API}?action=get_comments&photo=${encodeURIComponent(photoKey)}`);
 }
 
-function apiGetLikes(photoKey) {
-  return requestJSON(`${INTERACTION_API}?action=get_likes&photo=${encodeURIComponent(photoKey)}`);
+function apiGetStats(photoKeys) {
+  const qs = photoKeys.map((k) => encodeURIComponent(k)).join(',');
+  return requestJSON(`${INTERACTION_API}?action=get_stats&photos=${qs}`);
 }
 
 function apiGetCaptcha() {
@@ -38,6 +39,34 @@ function apiPostComment(photoKey, name, content, captcha) {
 function apiPostLike(photoKey) {
   const body = new window.URLSearchParams({ action: 'post_like', photo: photoKey });
   return requestJSON(INTERACTION_API, { method: 'POST', body });
+}
+
+// 批量加载点赞/评论数：收集整页照片 key，合并成一次 get_stats 请求，避免逐张 N+1
+const pendingStats = new Map(); // photoKey -> { likeEl, commentEl }
+let statsFlushTimer = null;
+
+function queueStatsLoad(photoKey, likeEl, commentEl) {
+  pendingStats.set(photoKey, { likeEl, commentEl });
+  if (statsFlushTimer === null) {
+    statsFlushTimer = setTimeout(flushStats, 0);
+  }
+}
+
+function flushStats() {
+  statsFlushTimer = null;
+  if (pendingStats.size === 0) return;
+  const entries = [...pendingStats.entries()];
+  pendingStats.clear();
+  apiGetStats(entries.map(([key]) => key)).then((res) => {
+    if (!res || !res.ok) return;
+    for (const [photoKey, { likeEl, commentEl }] of entries) {
+      const s = res.stats[photoKey];
+      if (s) {
+        likeEl.textContent = s.likes;
+        commentEl.textContent = s.comments;
+      }
+    }
+  }).catch(() => {});
 }
 
 // 为一张照片挂载 👍/💬 交互（container 是照片卡片根元素）
@@ -56,8 +85,7 @@ function attachInteraction(container, src) {
   const likeCount = bar.querySelector('.like-count');
   const commentCount = bar.querySelector('.comment-count');
 
-  apiGetLikes(photoKey).then((res) => { if (res.ok) likeCount.textContent = res.count; }).catch(() => {});
-  apiGetComments(photoKey).then((res) => { if (res.ok) commentCount.textContent = res.comments.length; }).catch(() => {});
+  queueStatsLoad(photoKey, likeCount, commentCount);
 
   bar.querySelector('.like-btn').addEventListener('click', async () => {
     try {
