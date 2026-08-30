@@ -58,6 +58,8 @@ deploy-*.sh
 deploy-*.ps1
 *.local
 scripts/.deploy.env                # 部署配置不入库（含真实 SSH 信息）
+# 例外：公共函数库必须入库（否则会误伤于 deploy-*.sh 规则）
+!scripts/deploy-common.sh
 
 # ======== 资源图片（不追踪二进制大文件，保留在本地用于预览与 rsync 同步） ========
 matches/
