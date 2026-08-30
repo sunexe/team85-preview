@@ -111,28 +111,6 @@ function initYearNav() {
   });
 }
 
-// 添加页面过渡效果
-function initPageTransitions() {
-  const sections = document.querySelectorAll('.page-transition');
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    },
-    {
-      threshold: 0.1,
-    },
-  );
-
-  sections.forEach((section) => {
-    observer.observe(section);
-  });
-}
-
 // 图片懒加载
 function initLazyLoading() {
   const images = document.querySelectorAll('img[data-src]');
@@ -299,7 +277,11 @@ async function loadAnnouncementBanner() {
     const data = await response.json();
     
     if (data.announcements && data.announcements.length > 0) {
-      const latestAnnouncement = data.announcements[0];
+      // 按日期倒序取最新一条（数据文件本身有序，这里做双保险）
+      const sorted = [...data.announcements].sort(
+        (a, b) => new Date(b.date) - new Date(a.date),
+      );
+      const latestAnnouncement = sorted[0];
       const banner = document.getElementById('announcement-banner');
       
       if (banner) {
@@ -473,73 +455,16 @@ function hideAnnouncementBanner() {
     banner.style.transition = 'all 0.4s ease-out';
     banner.style.opacity = '0';
     banner.style.transform = 'translateY(-100%)';
-    
+
     setTimeout(() => {
       banner.style.display = 'none';
     }, 400);
   }
 }
 
-/**
- * 🔧 开发者工具：测试不同类型的公告
- * 在浏览器控制台中调用以下函数进行测试：
- * - testUrgentAnnouncement() - 测试紧急公告
- * - testNormalAnnouncement() - 测试普通公告  
- * - testLongAnnouncement() - 测试长内容公告
- */
-window.testUrgentAnnouncement = function() {
-  const testData = {
-    id: 999,
-    title: "🚨 紧急通知：明日比赛时间调整",
-    content: "由于天气原因，原定明日下午3点的比赛调整为上午10点进行，请各位队友注意时间调整，提前做好准备。",
-    date: new Date().toISOString().split('T')[0],
-    type: "urgent",
-    priority: "high"
-  };
-  
-  const banner = document.getElementById('announcement-banner');
-  if (banner) {
-    createElegantAnnouncement(testData, banner);
-    animateAnnouncementEntrance(banner);
-  }
-};
-
-window.testNormalAnnouncement = function() {
-  const testData = {
-    id: 998,
-    title: "周末训练安排",
-    content: "本周末训练时间为下午2点至4点，地点在夏桂埔足球场，请大家按时参加。",
-    date: new Date().toISOString().split('T')[0],
-    type: "normal"
-  };
-  
-  const banner = document.getElementById('announcement-banner');
-  if (banner) {
-    createElegantAnnouncement(testData, banner);
-    animateAnnouncementEntrance(banner);
-  }
-};
-
-window.testLongAnnouncement = function() {
-  const testData = {
-    id: 997,
-    title: "球队年度总结及未来规划",
-    content: "亲爱的队友们，回顾过去一年，我们球队取得了许多骄人的成绩。从年初的新年杯到年末的友谊赛，每一场比赛都见证了我们的成长。在新的一年里，我们将继续秉承'因为热爱所以坚持'的理念，加强训练，提升技术水平，争取在更多的比赛中展现我们的风采。同时，我们也将加强团队建设，增进队友之间的友谊，让我们的球队更加团结。希望每一位队友都能积极参与，为球队的发展贡献自己的力量。",
-    date: new Date().toISOString().split('T')[0],
-    type: "normal"
-  };
-  
-  const banner = document.getElementById('announcement-banner');
-  if (banner) {
-    createElegantAnnouncement(testData, banner);
-    animateAnnouncementEntrance(banner);
-  }
-};
-
 document.addEventListener('DOMContentLoaded', () => {
   initYearNav();
   loadMatchData();
-  initPageTransitions();
   initLazyLoading();
   loadMembers();
   addScrollIndicator();
