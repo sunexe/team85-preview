@@ -465,7 +465,7 @@ function animateAnnouncementEntrance(banner) {
   banner.style.transform = 'translateY(-20px)';
   
   // 使用 requestAnimationFrame 确保动画流畅
-  requestAnimationFrame(() => {
+  window.requestAnimationFrame(() => {
     banner.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
     banner.style.opacity = '1';
     banner.style.transform = 'translateY(0)';
