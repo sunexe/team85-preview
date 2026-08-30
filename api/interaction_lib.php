@@ -75,3 +75,63 @@ function ensure_data_dir(): void {
         mkdir(INTERACTION_DATA_DIR, 0755, true);
     }
 }
+
+function get_captcha(): array {
+    $a = random_int(1, 9);
+    $b = random_int(1, 9);
+    $_SESSION['captcha_answer'] = $a + $b;
+    return ['ok' => true, 'question' => "{$a} + {$b} = ?"];
+}
+
+function get_comments(string $photo): array {
+    $comments = read_json(INTERACTION_COMMENTS_FILE);
+    return ['ok' => true, 'comments' => $comments[$photo] ?? []];
+}
+
+function post_comment(string $photo, string $name, string $content, string $captcha, string $ip): array {
+    $limits = read_json(INTERACTION_RATE_LIMIT_FILE);
+    if (is_rate_limited($ip, $limits, time(), INTERACTION_RATE_LIMIT_SECONDS)) {
+        return ['ok' => false, 'error' => '操作过于频繁，请稍后再试', 'status' => 429];
+    }
+    write_json(INTERACTION_RATE_LIMIT_FILE, $limits);
+
+    if (!verify_captcha_answer($_SESSION['captcha_answer'] ?? null, $captcha)) {
+        return ['ok' => false, 'error' => '验证码错误', 'status' => 400];
+    }
+    unset($_SESSION['captcha_answer']);
+
+    $error = validate_comment_input($name, $content, default_sensitive_words());
+    if ($error !== null) {
+        return ['ok' => false, 'error' => $error, 'status' => 400];
+    }
+
+    $name = trim($name);
+    $content = trim($content);
+    $comments = read_json(INTERACTION_COMMENTS_FILE);
+    $comments[$photo][] = ['id' => uniqid(), 'name' => $name, 'content' => $content, 'time' => date('c')];
+    write_json(INTERACTION_COMMENTS_FILE, $comments);
+    return ['ok' => true];
+}
+
+function get_likes(string $photo): array {
+    $likes = read_json(INTERACTION_LIKES_FILE);
+    return ['ok' => true, 'count' => $likes[$photo] ?? 0];
+}
+
+function post_like(string $photo, string $ip): array {
+    $limits = read_json(INTERACTION_RATE_LIMIT_FILE);
+    if (is_rate_limited($ip, $limits, time(), INTERACTION_RATE_LIMIT_SECONDS)) {
+        return ['ok' => false, 'error' => '操作过于频繁，请稍后再试', 'status' => 429];
+    }
+    write_json(INTERACTION_RATE_LIMIT_FILE, $limits);
+
+    $cookie = 'liked_' . md5($photo);
+    if (isset($_COOKIE[$cookie])) {
+        return ['ok' => false, 'error' => '你已经点过赞了', 'status' => 400];
+    }
+    $likes = read_json(INTERACTION_LIKES_FILE);
+    $likes[$photo] = ($likes[$photo] ?? 0) + 1;
+    write_json(INTERACTION_LIKES_FILE, $likes);
+    setcookie($cookie, '1', time() + 365 * 24 * 3600, '/');
+    return ['ok' => true, 'count' => $likes[$photo]];
+}

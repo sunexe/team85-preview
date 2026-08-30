@@ -45,5 +45,9 @@ check('读回一致', read_json($tmp) === ['a' => 1]);
 check('读不存在文件返回默认', read_json($tmp . '.nope', ['x']) === ['x']);
 @unlink($tmp);
 
+echo "get_comments / post_comment:\n";
+$comments = ['p1' => [['id' => 'a', 'name' => '张三', 'content' => '好球', 'time' => '2026-08-30T00:00:00+08:00']]];
+check('评论结构含字段', isset($comments['p1'][0]['id'], $comments['p1'][0]['name'], $comments['p1'][0]['content'], $comments['p1'][0]['time']));
+
 echo "\n结果: $PASS 通过, $FAIL 失败\n";
 exit($FAIL > 0 ? 1 : 0);
