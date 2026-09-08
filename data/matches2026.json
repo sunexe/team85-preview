@@ -419,6 +419,26 @@
             "description": "周末常规训练赛",
             "imageUrl": "matches/2026/20260829.JPG",
             "videoUrls": ["https://v.douyin.com/AiXgiajI47I/"]
+        },
+        {
+            "name": "与深圳海燕队友谊赛",
+            "date": "2026-9-5",
+            "location": "汕头市体育中心足球场",
+            "weather": "晴",
+            "players": 15,
+            "description": "有朋自远方来，以球会友",
+            "imageUrl": "matches/2026/20260905-1.JPG",
+            "videoUrls": []
+        },
+        {
+            "name": "与深圳海燕队友谊赛",
+            "date": "2026-9-5",
+            "location": "汕头市体育中心足球场",
+            "weather": "晴",
+            "players": 15,
+            "description": "有朋自远方来，以球会友",
+            "imageUrl": "matches/2026/20260905-2.JPG",
+            "videoUrls": []
         }
                ]
 }
