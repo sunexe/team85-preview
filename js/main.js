@@ -384,8 +384,9 @@ function formatAnnouncementDate(dateString) {
       const parts = dateString.split('/');
       date = new Date(parts[0], parts[1] - 1, parts[2]);
     } else {
-      // 处理 "2025-07-01" 格式
-      date = new Date(dateString);
+      // 处理 "2025-07-01" 格式（按本地时间解析，避免 ISO 串被当作 UTC 导致当天显示为负数）
+      const parts = dateString.split('-');
+      date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
     }
     
     const now = new Date();
