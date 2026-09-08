@@ -428,7 +428,7 @@
             "players": 15,
             "description": "有朋自远方来，以球会友",
             "imageUrl": "matches/2026/20260905-1.JPG",
-            "videoUrls": []
+            "videoUrls": ["https://v.douyin.com/qzx9uAFBjJ0/"]
         },
         {
             "name": "与深圳海燕队友谊赛",
@@ -438,7 +438,7 @@
             "players": 15,
             "description": "有朋自远方来，以球会友",
             "imageUrl": "matches/2026/20260905-2.JPG",
-            "videoUrls": []
+            "videoUrls": ["https://v.douyin.com/qzx9uAFBjJ0/"]
         }
                ]
 }
