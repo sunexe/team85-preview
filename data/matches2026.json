@@ -439,6 +439,15 @@
             "description": "有朋自远方来，以球会友",
             "imageUrl": "matches/2026/20260905-2.JPG",
             "videoUrls": ["https://v.douyin.com/qzx9uAFBjJ0/"]
+        },
+        {
+            "name": "周末常规训练赛",
+            "date": "2026-9-12",
+            "location": "夏桂埔足球场",
+            "weather": "晴",
+            "players": 15,
+            "description": "周末常规训练赛",
+            "imageUrl": "matches/2026/20260912.JPG"
         }
                ]
 }
