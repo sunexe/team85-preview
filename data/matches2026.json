@@ -447,7 +447,8 @@
             "weather": "晴",
             "players": 15,
             "description": "周末常规训练赛",
-            "imageUrl": "matches/2026/20260912.JPG"
+            "imageUrl": "matches/2026/20260912.JPG",
+            "videoUrls": ["https://v.douyin.com/KrTLLs1gZaI/"]
         }
                ]
 }
